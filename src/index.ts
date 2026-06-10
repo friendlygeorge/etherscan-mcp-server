@@ -85,7 +85,7 @@ const server = new McpServer({
 // ── Tool: get_eth_balance ──
 server.tool(
   "get_eth_balance",
-  "Get the native ETH balance for an Ethereum address (in ETH, not wei)",
+  "Check ETH balance for any Ethereum address. Returns balance in ETH (not wei). Use for quick portfolio checks or verifying funds before a transaction. Returns: {address: string, balance_eth: string}.",
   {
     address: z.string().describe("Ethereum address (0x...) to check balance for"),
   },
@@ -116,7 +116,7 @@ server.tool(
 // ── Tool: get_token_balances ──
 server.tool(
   "get_token_balances",
-  "Get ERC-20 token balances for an Ethereum address (token name, symbol, contract, amount). Requires an Etherscan API key for best results.",
+  "List all ERC-20 token balances held by an Ethereum address. Returns token name, symbol, contract address, and human-readable amount for each token. Requires ETHERSCAN_API_KEY env var. Supports pagination for wallets with many tokens. Use get_erc20_transfers as fallback if no API key.",
   {
     address: z.string().describe("Ethereum address (0x...) to check token balances for"),
     page: z.string().optional().default("1").describe("Page number for pagination (default 1)"),
@@ -163,7 +163,7 @@ server.tool(
 // ── Tool: get_transaction ──
 server.tool(
   "get_transaction",
-  "Get full details for a single transaction by its hash (from, to, value, gas, input data, status)",
+  "Look up a single transaction by its hash. Returns from, to, value (ETH), gas limit, gas price (Gwei), nonce, input data, and block number. Use when you have a specific tx hash and need full details. For bulk transactions, use get_transactions_by_address instead.",
   {
     txhash: z.string().describe("Transaction hash (0x...) to look up"),
   },
@@ -206,7 +206,7 @@ server.tool(
 // ── Tool: get_transactions_by_address ──
 server.tool(
   "get_transactions_by_address",
-  "Get the normal (external) transactions for an Ethereum address, newest first. Includes value, gas, from/to, method.",
+  "List normal (external) transactions for an Ethereum address. Returns value (ETH), direction (IN/OUT), gas price, function name, date, and status for each tx. Paginated, newest first. For ERC-20 transfers, use get_erc20_transfers. For contract-to-contract calls, use get_internal_transactions.",
   {
     address: z.string().describe("Ethereum address (0x...) to fetch transactions for"),
     startblock: z.string().optional().default("0").describe("Starting block number (default 0)"),
@@ -258,7 +258,7 @@ server.tool(
 // ── Tool: get_erc20_transfers ──
 server.tool(
   "get_erc20_transfers",
-  "Get ERC-20 token transfer events for an Ethereum address (token transfers in/out)",
+  "List ERC-20 token transfer events for an address. Returns token name, symbol, amount (human-readable), direction (IN/OUT), date, and contract address for each transfer. Filter by contract address to track a specific token. Use get_token_balances for current holdings instead.",
   {
     address: z.string().describe("Ethereum address (0x...) to fetch ERC-20 transfers for"),
     contractaddress: z.string().optional().describe("Optional: filter by a specific ERC-20 token contract address"),
@@ -312,7 +312,7 @@ server.tool(
 // ── Tool: get_internal_transactions ──
 server.tool(
   "get_internal_transactions",
-  "Get internal transactions (contract calls) for an Ethereum address. These are transactions triggered by smart contracts, not direct EOA transfers.",
+  "List internal transactions (contract-to-contract calls) for an address. These are transactions triggered by smart contracts, not direct EOA transfers. Returns value (ETH), direction, type (call/create), date, and hash. Use for tracing DeFi interactions or contract execution flows.",
   {
     address: z.string().describe("Ethereum address (0x...) to fetch internal transactions for"),
     startblock: z.string().optional().default("0").describe("Starting block number (default 0)"),
@@ -362,7 +362,7 @@ server.tool(
 // ── Tool: get_contract_abi ──
 server.tool(
   "get_contract_abi",
-  "Get the ABI (Application Binary Interface) for a verified smart contract. The ABI is a JSON array describing the contract's functions and events — required for calling contract methods.",
+  "Fetch the ABI for a verified smart contract. Returns a summary: function count, event count, and a list of all functions with their signatures and state mutability. Includes a truncated raw ABI (2000 chars). The ABI is required for calling contract methods or decoding transactions. Use get_transaction to see raw input data first.",
   {
     address: z.string().describe("Verified contract address (0x...) to fetch the ABI for"),
   },
@@ -425,7 +425,7 @@ server.tool(
 // ── Tool: get_gas_price ──
 server.tool(
   "get_gas_price",
-  "Get the current gas price oracle from Etherscan — recommended gas prices for slow/standard/fast transaction speeds (in Gwei)",
+  "Get current Ethereum gas prices from Etherscan oracle. Returns three tiers: Safe Low (turtle, cheapest), Standard (car, recommended), Fast (rocket, urgent) all in Gwei. Also shows base fee, last block, and estimated ETH cost for a simple 21k-gas transfer. Use before sending any transaction to set appropriate gas.",
   {},
   async () => {
     try {
