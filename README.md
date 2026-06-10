@@ -144,6 +144,46 @@ Contract ABI for 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
   ...
 ```
 
+## Use Cases
+
+### Wallet Inspection
+"Check the ETH and token balances of this address" — get a snapshot of any wallet's holdings in seconds. Works with any Ethereum address, including smart contract wallets and multisigs.
+
+### Transaction Forensics
+"Show me the last 20 transactions for this address" — trace on-chain activity, identify counterparties, and understand fund flows. Use `get_internal_transactions` for contract calls and `get_erc20_transfers` for token movements.
+
+### Smart Contract Analysis
+"Get the ABI for the Uniswap Router contract" — fetch verified contract ABIs to understand what functions are available. Essential for debugging failed transactions or understanding how a protocol works.
+
+### Gas Optimization
+"What are current gas prices?" — get slow/standard/fast gas estimates with projected transaction costs. Time your transactions to save on fees.
+
+### DeFi Portfolio Tracking
+"Show me all token balances for my wallet" — aggregate holdings across ERC-20 tokens. Combine with `get_prices` from the CoinGecko MCP server for full portfolio valuation.
+
+### Security Auditing
+"List all internal transactions for this contract" — trace internal calls to understand contract behavior. Useful for identifying unusual patterns or verifying that a contract does what it claims.
+
+## Troubleshooting
+
+### "API key required" or very slow responses
+Without an API key, Etherscan limits you to 1 call per 5 seconds. Get a free key at [etherscan.io/apis](https://etherscan.io/apis) and set the `ETHERSCAN_API_KEY` environment variable for 5 calls/sec.
+
+### "Rate limit exceeded" (429)
+The server auto-retries on 429, but rapid queries can still hit limits. With a free API key, you get 5 calls/sec. Space requests ~200ms apart for best results.
+
+### "Contract not found" or empty ABI
+Only verified contracts have ABIs on Etherscan. If a contract isn't verified, the API returns an error. Check the contract's verification status on etherscan.io first.
+
+### Server won't start
+Make sure Node.js 18+ is installed: `node --version`. If using npx, ensure npm is up to date: `npm install -g npm@latest`.
+
+### MCP client can't connect
+Verify the config path is correct. Claude Desktop uses `~/Library/Application Support/Claude/claude_desktop_config.json` on macOS and `%APPDATA%\Claude\claude_desktop_config.json` on Windows. Restart the client after config changes.
+
+### "Address checksum" errors
+Etherscan expects checksummed addresses (mixed case). The server handles this automatically, but if you see errors, try the checksummed version from etherscan.io.
+
 ## Requirements
 
 - Node.js 18+
