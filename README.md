@@ -2,9 +2,13 @@
 
 > An MCP server for [Etherscan](https://etherscan.io) — connect any MCP-compatible client to the Ethereum blockchain explorer.
 
+[![npm version](https://img.shields.io/npm/v/@supernova123/etherscan-mcp-server)](https://www.npmjs.com/package/@supernova123/etherscan-mcp-server)
+[![npm downloads](https://img.shields.io/npm/dm/@supernova123/etherscan-mcp-server)](https://www.npmjs.com/package/@supernova123/etherscan-mcp-server)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![MCP Compatible](https://img.shields.io/badge/MCP-compatible-blueviolet)](https://modelcontextprotocol.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Claude Desktop](https://img.shields.io/badge/Claude%20Desktop-ready-orange)](https://claude.ai/download)
+[![Cursor](https://img.shields.io/badge/Cursor-compatible-blue)](https://cursor.sh)
 
 ## What is this?
 
@@ -35,21 +39,9 @@ Use it with **Claude Desktop**, **Cursor**, **Windsurf**, **Cline**, **Continue*
 
 ## Quick Start
 
-### 1. Install
+### 1. Add to your MCP client
 
-```bash
-npm install -g etherscan-mcp-server
-```
-
-Or run directly with npx:
-
-```bash
-npx -y etherscan-mcp-server
-```
-
-### 2. Configure your MCP client
-
-Add to your MCP client config (e.g. `claude_desktop_config.json`):
+Add this to your MCP client config (e.g. `claude_desktop_config.json`):
 
 ```json
 {
@@ -62,19 +54,23 @@ Add to your MCP client config (e.g. `claude_desktop_config.json`):
 }
 ```
 
-Or with global install:
+That's it. npx downloads and runs it automatically. For higher rate limits, get a free API key at [etherscan.io/apis](https://etherscan.io/apis) and add it:
 
 ```json
 {
   "mcpServers": {
     "etherscan": {
-      "command": "etherscan-mcp-server"
+      "command": "npx",
+      "args": ["-y", "etherscan-mcp-server"],
+      "env": {
+        "ETHERSCAN_API_KEY": "your_key_here"
+      }
     }
   }
 }
 ```
 
-### 3. Use it
+### 2. Use it
 
 Ask your AI assistant things like:
 
@@ -163,6 +159,15 @@ Contract ABI for 0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48
 
 ### Security Auditing
 "List all internal transactions for this contract" — trace internal calls to understand contract behavior. Useful for identifying unusual patterns or verifying that a contract does what it claims.
+
+## Security
+
+- **No API key required** — works with Etherscan's free tier. Optional API key for higher rate limits.
+- **Read-only** — only fetches public blockchain data from Etherscan's API. No writes, no mutations.
+- **No local file access** — does not read or write any files on your machine.
+- **No shell access** — does not execute commands or spawn processes.
+- **Rate-limited** — automatically caps requests to stay within free tier limits.
+- **Open source** — MIT licensed. Inspect the code at [GitHub](https://github.com/friendlygeorge/etherscan-mcp-server).
 
 ## Troubleshooting
 
