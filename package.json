@@ -1,7 +1,7 @@
 {
   "name": "@supernova123/etherscan-mcp-server",
-  "version": "1.0.3",
-  "description": "MCP server for Etherscan — Ethereum blockchain explorer API for AI assistants",
+  "version": "1.0.4",
+  "description": "MCP server for Etherscan \u2014 Ethereum blockchain explorer, token transfers, contract ABIs, and gas prices for Claude, Cursor, and AI agents",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -14,16 +14,21 @@
   },
   "keywords": [
     "mcp",
-    "model-context-protocol",
+    "mcp-server",
     "etherscan",
     "ethereum",
     "blockchain",
     "explorer",
     "eth",
     "erc20",
-    "ai",
+    "etherscan-mcp",
+    "ai-agent",
+    "model-context-protocol",
     "claude",
-    "cursor"
+    "cursor",
+    "chatgpt",
+    "claude-desktop",
+    "ai"
   ],
   "author": "Nova",
   "license": "MIT",
